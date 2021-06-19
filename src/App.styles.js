@@ -8,6 +8,17 @@ const useStyles = createUseStyles({
     justifyContent: "center",
     alignItems: "center",
   },
+  colorSwatchContainer: {
+    display: "flex",
+  },
+  colorSwatch: {
+    margin: "0.5rem",
+    padding: 0,
+    width: "25px",
+    height: "25px",
+    border: "none",
+    cursor: "pointer",
+  },
 });
 
 export default useStyles;

@@ -1,13 +1,34 @@
 import useStyles from "./Grid.styles";
-import { useState } from "react";
 
-const Grid = () => {
-  const [cells] = useState(Array.from({ length: 3600 }));
+const blankCell = {
+  color: "#ffffff",
+};
+
+const Grid = ({ currentColor, cells, setCells }) => {
   const classes = useStyles();
+
+  const updateCell = (i, defaultState) => (e) => {
+    e.preventDefault();
+    setCells(
+      cells.map((cell, cellIdx) => {
+        if (cellIdx === i) {
+          return defaultState ? defaultState : { color: currentColor };
+        }
+        return cell;
+      })
+    );
+  };
+
   return (
     <div className={classes.grid}>
-      {cells.map(() => (
-        <div className={classes.cell}></div>
+      {cells.map((cell, i) => (
+        <div
+          key={i}
+          style={{ background: cell.color }}
+          className={classes.cell}
+          onClick={updateCell(i)}
+          onContextMenu={updateCell(i, blankCell)}
+        ></div>
       ))}
     </div>
   );
