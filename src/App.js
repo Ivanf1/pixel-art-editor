@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import useStyles from "./App.styles";
 import Grid from "./components/Grid";
 import ColorPicker from "./components/ColorPicker";
-import { useMemo } from "react";
 
 const blankCell = {
   color: "#ffffff",
@@ -28,6 +27,10 @@ function App() {
     [cells]
   );
 
+  const clearGrid = () => {
+    setCells(initialCells);
+  };
+
   // const onSetColor = (color) => {
   //   setColorHistory(colorHistory.slice(-9).concat(color));
   //   setCurrentColor(color);
@@ -35,6 +38,7 @@ function App() {
 
   return (
     <div className={classes.app}>
+      <Grid cells={cells} setCells={setCells} currentColor={currentColor} />
       <ColorPicker currentColor={currentColor} onSetColor={setCurrentColor} />
       <div className={classes.colorSwatchContainer}>
         {colorSwatch.map((color) => (
@@ -46,7 +50,14 @@ function App() {
           ></div>
         ))}
       </div>
-      <Grid cells={cells} setCells={setCells} currentColor={currentColor} />
+      <div className={classes.clearGridContainer}>
+        <input
+          className={classes.clearGridBtn}
+          type="button"
+          value="clear grid"
+          onClick={clearGrid}
+        />
+      </div>
     </div>
   );
 }

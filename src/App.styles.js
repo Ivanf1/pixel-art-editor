@@ -26,6 +26,18 @@ const useStyles = createUseStyles({
     border: "none",
     cursor: "pointer",
   },
+  clearGridContainer: {
+    display: "flex",
+    gridColumnStart: 2,
+    gridColumnEnd: 2,
+    gridRowStart: 4,
+    gridRowEnd: 4,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  clearGridBtn: {
+    padding: "4px",
+  },
 });
 
 export default useStyles;
