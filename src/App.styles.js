@@ -2,14 +2,21 @@ import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
   app: {
-    display: "flex",
+    display: "grid",
     width: "100%",
     height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    gridTemplateColumns: "80% 20%",
+    gridTemplateRows: "40px 30% 100px 5% 1fr 40px",
   },
   colorSwatchContainer: {
+    placeSelf: "start",
     display: "flex",
+    flexWrap: "wrap",
+    alignItems: "start",
+    gridColumnStart: 2,
+    gridColumnEnd: 2,
+    gridRowStart: 3,
+    gridRowEnd: 3,
   },
   colorSwatch: {
     margin: "0.5rem",

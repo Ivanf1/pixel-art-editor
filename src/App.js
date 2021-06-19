@@ -17,7 +17,14 @@ function App() {
   const classes = useStyles();
 
   const colorSwatch = useMemo(
-    () => [...new Set(cells.filter((cell) => cell !== blankCell).map((cell) => cell.color))],
+    () => [
+      ...new Set(
+        cells
+          .filter((cell) => cell !== blankCell)
+          .map((cell) => cell.color)
+          .slice(-12)
+      ),
+    ],
     [cells]
   );
 
