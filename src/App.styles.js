@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
     border: "none",
     cursor: "pointer",
   },
-  clearGridContainer: {
+  buttonsContainer: {
     display: "flex",
     flexDirection: "column",
     gridColumnStart: 2,
@@ -36,8 +36,14 @@ const useStyles = createUseStyles({
     justifyContent: "center",
     alignItems: "center",
   },
-  clearGridBtn: {
-    padding: "4px",
+  genericBtn: {
+    fontSize: "1em",
+    minWidth: "200px",
+    borderRadius: "5px",
+    boxShadow: "rgb(0 0 0 / 15%) 0px 0px 0px 1px, rgb(0 0 0 / 15%) 0px 8px 16px",
+    borderStyle: "none",
+    margin: "1rem",
+    padding: "10px",
   },
   sketchPickerContainer: {
     alignSelf: "center",

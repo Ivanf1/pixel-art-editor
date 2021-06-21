@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { SketchPicker } from "react-color";
 import Grid from "./components/Grid";
 import useStyles from "./App.styles";
+import { useCallback } from "react";
 
 const defaultColors = {
   blank: "#ffffff",
@@ -28,6 +29,34 @@ function App() {
     }
   }, [cells, currentColor]);
 
+  const keyboardShortcuts = useCallback(
+    (e) => {
+      // move current color backwards relative to presetColors array
+      if (e.keyCode === 65) {
+        const prevColorIdx = presetColors.indexOf(currentColor) - 1;
+        const newColorIdx = prevColorIdx >= 0 ? prevColorIdx : 0;
+        setCurrentColor(presetColors[newColorIdx]);
+      }
+
+      // move current color forwards relative to presetColors array
+      if (e.keyCode === 70) {
+        const nextColorIdx = presetColors.indexOf(currentColor) + 1;
+        const newColorIdx =
+          nextColorIdx > presetColors.length - 1 ? presetColors.length - 1 : nextColorIdx;
+        setCurrentColor(presetColors[newColorIdx]);
+      }
+    },
+    [presetColors, currentColor]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", keyboardShortcuts, false);
+
+    return () => {
+      document.removeEventListener("keydown", keyboardShortcuts, false);
+    };
+  }, [keyboardShortcuts]);
+
   return (
     <div className={classes.app}>
       <Grid
@@ -44,15 +73,15 @@ function App() {
           disableAlpha={true}
         />
       </div>
-      <div className={classes.clearGridContainer}>
+      <div className={classes.buttonsContainer}>
         <input
-          className={classes.clearGridBtn}
+          className={classes.genericBtn}
           type="button"
           value="clear grid"
           onClick={() => setCells(initialCells)}
         />
         <input
-          className={classes.clearGridBtn}
+          className={classes.genericBtn}
           type="button"
           value="fill grid"
           onClick={() => setCells((cells) => cells.map(() => currentColor))}
