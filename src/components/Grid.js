@@ -1,10 +1,6 @@
 import useStyles from "./Grid.styles";
 
-const blankCell = {
-  color: "#ffffff",
-};
-
-const Grid = ({ currentColor, cells, setCells }) => {
+const Grid = ({ currentColor, cells, setCells, blankCell }) => {
   const classes = useStyles();
 
   const updateCell = (i, defaultState) => (e) => {
@@ -12,7 +8,7 @@ const Grid = ({ currentColor, cells, setCells }) => {
     setCells(
       cells.map((cell, cellIdx) => {
         if (cellIdx === i) {
-          return defaultState ? defaultState : { color: currentColor };
+          return defaultState ? defaultState : currentColor;
         }
         return cell;
       })
@@ -24,7 +20,7 @@ const Grid = ({ currentColor, cells, setCells }) => {
       {cells.map((cell, i) => (
         <div
           key={i}
-          style={{ background: cell.color }}
+          style={{ background: cell }}
           className={classes.cell}
           onClick={updateCell(i)}
           onContextMenu={updateCell(i, blankCell)}

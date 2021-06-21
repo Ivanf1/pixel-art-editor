@@ -3,14 +3,14 @@ import { createUseStyles } from "react-jss";
 const useStyles = createUseStyles({
   grid: {
     display: "grid",
-    gridTemplateRows: "repeat(60, 1fr)",
-    gridTemplateColumns: "repeat(60, 1fr)",
+    gridTemplateRows: "repeat(64, 1fr)",
+    gridTemplateColumns: "repeat(64, 1fr)",
     gridColumnStart: 1,
     gridColumnEnd: 1,
     gridRowStart: 2,
     gridRowEnd: "span 4",
-    width: "90vh",
-    height: "90vh",
+    width: "94vh",
+    height: "94vh",
     placeSelf: "center",
   },
   cell: {

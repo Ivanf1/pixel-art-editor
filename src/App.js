@@ -1,61 +1,62 @@
-import { useState, useMemo } from "react";
-import useStyles from "./App.styles";
+import { useState, useEffect, useRef } from "react";
+import { SketchPicker } from "react-color";
 import Grid from "./components/Grid";
-import ColorPicker from "./components/ColorPicker";
+import useStyles from "./App.styles";
 
-const blankCell = {
-  color: "#ffffff",
+const defaultColors = {
+  blank: "#ffffff",
+  colorPickerInitial: "#2C2C54",
 };
 
-const initialCells = Array.from({ length: 3600 }, () => blankCell);
+const initialCells = Array.from({ length: 64 * 64 }, () => defaultColors.blank);
 
 function App() {
   const [cells, setCells] = useState(initialCells);
-  const [currentColor, setCurrentColor] = useState("#2C2C54");
-  // const [colorHistory, setColorHistory] = useState([]);
+  const [currentColor, setCurrentColor] = useState(defaultColors.colorPickerInitial);
+  const [presetColors, setPresetColors] = useState([]);
+  const cellsRef = useRef(cells);
   const classes = useStyles();
 
-  const colorSwatch = useMemo(
-    () => [
-      ...new Set(
-        cells
-          .filter((cell) => cell !== blankCell)
-          .map((cell) => cell.color)
-          .slice(-12)
-      ),
-    ],
-    [cells]
-  );
-
-  const clearGrid = () => {
-    setCells(initialCells);
-  };
-
-  // const onSetColor = (color) => {
-  //   setColorHistory(colorHistory.slice(-9).concat(color));
-  //   setCurrentColor(color);
-  // };
+  useEffect(() => {
+    if (cellsRef.current !== cells) {
+      setPresetColors((presetColors) => {
+        return presetColors.includes(currentColor)
+          ? presetColors
+          : [...presetColors, currentColor].slice(-12);
+      });
+      cellsRef.current = cells;
+    }
+  }, [cells, currentColor]);
 
   return (
     <div className={classes.app}>
-      <Grid cells={cells} setCells={setCells} currentColor={currentColor} />
-      <ColorPicker currentColor={currentColor} onSetColor={setCurrentColor} />
-      <div className={classes.colorSwatchContainer}>
-        {colorSwatch.map((color) => (
-          <div
-            key={color}
-            onClick={() => setCurrentColor(color)}
-            className={classes.colorSwatch}
-            style={{ background: color }}
-          ></div>
-        ))}
+      <Grid
+        cells={cells}
+        setCells={setCells}
+        blankCell={defaultColors.blank}
+        currentColor={currentColor}
+      />
+      <div className={classes.sketchPickerContainer}>
+        <SketchPicker
+          color={currentColor}
+          onChange={(color) => setCurrentColor(color.hex)}
+          presetColors={presetColors}
+          disableAlpha={true}
+        />
       </div>
       <div className={classes.clearGridContainer}>
         <input
           className={classes.clearGridBtn}
           type="button"
           value="clear grid"
-          onClick={clearGrid}
+          onClick={() => setCells(initialCells)}
+        />
+        <input
+          className={classes.clearGridBtn}
+          type="button"
+          value="fill grid"
+          onClick={() => setCells((cells) => cells.map(() => currentColor))}
+          style={{ backgroundColor: currentColor, color: "white" }}
         />
       </div>
     </div>
