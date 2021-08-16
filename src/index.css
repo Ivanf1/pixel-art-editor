@@ -69,8 +69,8 @@ body {
   cursor: pointer;
   outline: 1px solid rgba(0, 0, 0, 0.11);
   background-color: white;
-  /* /* transition: all 0ms linear; */
-  /* transition-delay: 0ms; */
+  /* transition: all 0ms linear;
+  transition-delay: 0ms; */
 }
 
 .cell-index-display {

@@ -17,7 +17,7 @@ const App = () => {
     setPresetColors((presetColors) => {
       return presetColors.includes(currentColorRef.current)
         ? presetColors
-        : [...presetColors, currentColorRef.current].slice(-maxPresetColors);
+        : presetColors.concat(currentColorRef.current).slice(-maxPresetColors);
     });
   }, [cells, setPresetColors]);
 

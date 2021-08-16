@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import CellIndexDisplay from "./CellIndexDisplay";
 
 const Grid = ({ currentColor, cells, setCells, setCellsHistory, blankCell }) => {
