@@ -6,9 +6,9 @@ const Grid = ({ currentColor, cells, setCells, setCellsHistory, blankCell }) => 
   const [cellCoordinates, setCellCoordinates] = useState({ x: 0, y: 0 });
   const [displayCoordinates, setDisplayCoordinates] = useState({ x: 0, y: 0 });
 
-  const toggleCellIndexDisplay = () => {
+  const toggleCellIndexDisplay = useCallback(() => {
     setCellIndexDisplayVisibility((current) => !current);
-  };
+  }, []);
 
   const updateCell = useCallback(
     (i, defaultState) => (e) => {
@@ -26,18 +26,17 @@ const Grid = ({ currentColor, cells, setCells, setCellsHistory, blankCell }) => 
     [cells, currentColor, setCells, setCellsHistory]
   );
 
-  const updateCoordinates = (i) => (e) => {
-    setDisplayCoordinates({ x: e.clientX + 30, y: e.clientY + 8 });
-    setCellCoordinates({ x: i % 64, y: parseInt(i / 64) });
-  };
+  const updateCoordinates = useCallback(
+    (i) => (e) => {
+      setDisplayCoordinates({ x: e.clientX + 30, y: e.clientY + 8 });
+      setCellCoordinates({ x: i % 64, y: parseInt(i / 64) });
+    },
+    []
+  );
 
   const cellsElement = useMemo(
     () => (
-      <div
-        className="grid"
-        onMouseEnter={toggleCellIndexDisplay}
-        onMouseLeave={toggleCellIndexDisplay}
-      >
+      <>
         {cells.map((cell, i) => (
           <div
             key={i}
@@ -48,9 +47,9 @@ const Grid = ({ currentColor, cells, setCells, setCellsHistory, blankCell }) => 
             onMouseOver={updateCoordinates(i)}
           ></div>
         ))}
-      </div>
+      </>
     ),
-    [cells, blankCell, updateCell]
+    [cells, blankCell, updateCell, updateCoordinates]
   );
 
   return (
@@ -62,7 +61,13 @@ const Grid = ({ currentColor, cells, setCells, setCellsHistory, blankCell }) => 
         displayX={displayCoordinates.x}
         displayY={displayCoordinates.y}
       />
-      {cellsElement}
+      <div
+        className="grid"
+        onMouseEnter={toggleCellIndexDisplay}
+        onMouseLeave={toggleCellIndexDisplay}
+      >
+        {cellsElement}
+      </div>
     </>
   );
 };
