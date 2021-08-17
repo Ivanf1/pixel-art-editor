@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { SketchPicker } from "react-color";
 import Grid from "./components/Grid";
 import useStateWithLocalStorage from "./hooks/localStorage";
 import { defaultColors, maxPresetColors, initialCells } from "./constants/constants";
+import useWebSocket from "react-use-websocket";
+import { hexToRGB565 } from "./utils/hexConverter";
 
 const App = () => {
   const [cells, setCells] = useStateWithLocalStorage("cells", initialCells);
@@ -11,7 +13,43 @@ const App = () => {
   const [currentColor, setCurrentColor] = useState(defaultColors.colorPickerInitial);
   const currentColorRef = useRef(currentColor);
 
+  const [socketUrl, setSocketUrl] = useState(null);
+  const { sendMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
+    onOpen: () => console.log("websocket open"),
+    onClose: () => console.log("closing ws"),
+    //Will attempt to reconnect on all close events, such as server shutting down
+    // shouldReconnect: () => true,
+  });
+
   currentColorRef.current = currentColor;
+
+  const handleChangeSocketUrl = useCallback((newUrl) => setSocketUrl(newUrl), []);
+
+  const handleSendMessageWebsocket = useCallback(
+    (cellIdx, color, fill = false) => {
+      if (socketUrl && readyState === 1) {
+        if (fill) {
+          sendJsonMessage({ fill: "fill", color: hexToRGB565(color) });
+          return;
+        }
+        sendJsonMessage({ cellIdx, color: hexToRGB565(color) });
+      }
+    },
+    [socketUrl, readyState, sendJsonMessage]
+  );
+
+  const fillAllCells = (init = false) => {
+    setCells(init ? initialCells : (cells) => cells.map(() => currentColor));
+    handleSendMessageWebsocket(0, init ? defaultColors.blank : currentColor, true);
+  };
+
+  const storeOnEsp = () => {
+    if (socketUrl && readyState === 1) {
+      const colors16array = cells.map((cell) => hexToRGB565(cell));
+
+      sendMessage(colors16array.join(","));
+    }
+  };
 
   useEffect(() => {
     setPresetColors((presetColors) => {
@@ -112,6 +150,7 @@ const App = () => {
         setCellsHistory={setCellsHistory}
         blankCell={defaultColors.blank}
         currentColor={currentColor}
+        sendMessageWebsocket={handleSendMessageWebsocket}
       />
       <div className="right-panel">
         <div className="sketch-picker-container">
@@ -127,7 +166,7 @@ const App = () => {
             className="generic-btn"
             type="button"
             value="clear grid"
-            onClick={() => setCells(initialCells)}
+            onClick={() => fillAllCells(true)}
           />
           <input
             className="generic-btn"
@@ -139,9 +178,16 @@ const App = () => {
             className="generic-btn"
             type="button"
             value="fill grid"
-            onClick={() => setCells((cells) => cells.map(() => currentColor))}
+            onClick={() => fillAllCells()}
             style={{ backgroundColor: currentColor, color: "white" }}
           />
+          <input
+            className="generic-btn"
+            type="button"
+            value="connect websocket"
+            onClick={() => handleChangeSocketUrl("ws://192.168.0.14/display")}
+          />
+          <input className="generic-btn" type="button" value="store" onClick={() => storeOnEsp()} />
         </div>
       </div>
     </div>
