@@ -25,11 +25,7 @@ const Grid = ({
         historyData: [...prevState.historyData, { cellIdx: i, cellPrev: cells[i] }].slice(-10),
         historyIdx: prevState.historyData.length === 10 ? 9 : prevState.historyData.length,
       }));
-      setCells(
-        cells.map((cell, cellIdx) => {
-          return cellIdx === i ? defaultState || currentColor : cell;
-        })
-      );
+      setCells((cells) => [...cells, (cells[i] = defaultState || currentColor)]);
       sendMessageWebsocket(i, defaultState || currentColor);
     },
     [cells, currentColor, setCells, setCellsHistory, sendMessageWebsocket]

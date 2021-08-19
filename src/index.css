@@ -17,7 +17,7 @@ body {
   margin: auto;
 }
 
-.app {
+.editor {
   display: grid;
   height: 100%;
   width: 100%;
@@ -28,7 +28,7 @@ body {
 .right-panel {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 40% 1fr 1fr;
+  grid-template-rows: 50% 1fr;
 }
 
 .grid {
